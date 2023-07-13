@@ -6,7 +6,7 @@ import generarJWT from '../helpers/generarJWT.js';
 
 
 
-// registrar un usuario
+//* ==========> Registrar un  usuario (guardarlo en la db) <==========
 const registrar = async (req, res) => {
    try {      
       const { email } = req.body;      
@@ -33,6 +33,7 @@ const registrar = async (req, res) => {
 }
 
 
+//* ==========> Autenticar usuario (iniciar sesion) <==========
 const autenticar = async(req, res) => {
    const { email, password } = req.body;
 
@@ -63,7 +64,33 @@ const autenticar = async(req, res) => {
    }
 }
 
+
+//* ==========> Confirmar usuario (se envia token por la url) <==========
+const confirmar = async(req, res) => {
+   const { token } = req.params
+
+   // verificamos si el token es valido
+   const usuarioConfirmar = await Usuario.findOne({ token })   
+   if(!usuarioConfirmar) {
+      const error = new Error('Token Invalido')         
+      return res.status(400).json({ msg: error.message });
+   }
+
+   // si token valido
+   try {
+      usuarioConfirmar.confirmado = true;
+      usuarioConfirmar.token = '';
+      await usuarioConfirmar.save();
+
+      res.json({msg: 'Usuario Confirmado Correctamente' })      
+   } catch (error) {
+      console.log(error)
+   }
+   
+}
+
 export {
    registrar,
    autenticar,
+   confirmar,
 }
