@@ -7,10 +7,13 @@ import {
    olvidePassword,
    comprobarToken,
    NuevoPassword,
+   perfil,
 } from '../controllers/usuarioController.js'
+import checkAuth from '../middlewares/checkAuth.js'
+
+
 
 const router = express.Router()
-
 
 //* ===== Authenticación, Registro y Confirmación de Usuarios =======
 router.post('/', registrar);                            //? Crea un nuevo usuario
@@ -23,6 +26,8 @@ router.route('/olvide-password/:token')
    .get(comprobarToken)                                 //? check token del que solicito restablecer password
    .post(NuevoPassword)                                 //? check token del que solicito restablecer password
 
+//* ===== Routes Protegidas =======
+router.get('/perfil', checkAuth, perfil);
 
 
 

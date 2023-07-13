@@ -149,15 +149,21 @@ const NuevoPassword = async(req, res) => {
       } catch (error) {
          console.log(error);   
       }
-      
+
    } else {
       const error = new Error('Token Invalido')         
       return res.status(400).json({ msg: error.message });
    }
-
-
-
 }
+
+
+//* ==========> Perfil (View principal de la aplicacion)  <==========
+const perfil = async(req, res) => {
+
+   console.log('Desde perfil')
+}
+
+
 
 export {
    registrar,
@@ -166,4 +172,5 @@ export {
    olvidePassword,
    comprobarToken,
    NuevoPassword,
+   perfil,
 }
