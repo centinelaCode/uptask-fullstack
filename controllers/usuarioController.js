@@ -159,8 +159,9 @@ const NuevoPassword = async(req, res) => {
 
 //* ==========> Perfil (View principal de la aplicacion)  <==========
 const perfil = async(req, res) => {
+   const { usuario } = req
 
-   console.log('Desde perfil')
+   res.json(usuario)
 }
 
 
