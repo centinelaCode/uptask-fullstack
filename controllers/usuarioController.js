@@ -1,3 +1,5 @@
+import bcrypt from 'bcrypt'
+
 import Usuario from '../models/Usuario.js';
 import generarId from '../helpers/generarId.js';
 
@@ -18,8 +20,8 @@ const registrar = async (req, res) => {
       // si el email no esta registrado guardamos en la db
       const usuario = new Usuario(req.body);
       usuario.token = generarId(); //! se genera el token unico
+      
       const nuevoUsuario = await usuario.save();
-
       res.json(nuevoUsuario);
 
       console.log(nuevoUsuario)
@@ -31,7 +33,7 @@ const registrar = async (req, res) => {
 
 
 const autenticar = async(req, res) => {
-   const {email, password} = req.body;
+   const { email, password } = req.body;
 
    // Verificar si el usuario existe
    const usuario = await Usuario.findOne({email})
@@ -46,7 +48,17 @@ const autenticar = async(req, res) => {
       return res.status(403).json({ msg: error.message });
    }
 
-   // Verificar si el password es correcto
+   // Verificar si el password es correcto     
+   if(await usuario.comprobarPassword(password)) {
+      res.json({
+         _id: usuario.id,
+         nombre: usuario.nombre,
+         email: usuario.email,
+      })
+   } else {
+      const error = new Error('El password es incorrecto')         
+      return res.status(403).json({ msg: error.message });
+   }
 }
 
 export {
