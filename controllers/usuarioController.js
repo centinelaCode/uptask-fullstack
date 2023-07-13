@@ -93,7 +93,7 @@ const confirmar = async(req, res) => {
 
 
 
-//* ==========> OlvidePassword (se envia el nuevo password para restabler password) <==========
+//* ==========> OlvidePassword (se envia el email y se genera nuevo token) <==========
 const olvidePassword = async(req, res) => {
    const { email } = req.body;
 
@@ -118,6 +118,20 @@ const olvidePassword = async(req, res) => {
 }
 
 
+//* ==========> OlvidePassword (se envia token via url)  <==========
+const comprobarToken = async(req, res) => {
+   const { token } = req.params;
+
+   const tokenValido = await Usuario.findOne({ token });
+   if(tokenValido) {
+      
+      res.json({msg: 'Token Valido y el Usuario Existe'})
+
+   } else {
+      const error = new Error('Token Invalido')         
+      return res.status(400).json({ msg: error.message });
+   }
+}
 
 
 export {
@@ -125,4 +139,5 @@ export {
    autenticar,
    confirmar,
    olvidePassword,
+   comprobarToken,
 }

@@ -5,6 +5,7 @@ import {
    autenticar,
    confirmar,
    olvidePassword,
+   comprobarToken,
 } from '../controllers/usuarioController.js'
 
 const router = express.Router()
