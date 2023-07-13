@@ -33,6 +33,7 @@ const registrar = async (req, res) => {
 }
 
 
+
 //* ==========> Autenticar usuario (iniciar sesion) <==========
 const autenticar = async(req, res) => {
    const { email, password } = req.body;
@@ -65,6 +66,7 @@ const autenticar = async(req, res) => {
 }
 
 
+
 //* ==========> Confirmar usuario (se envia token por la url) <==========
 const confirmar = async(req, res) => {
    const { token } = req.params
@@ -89,8 +91,38 @@ const confirmar = async(req, res) => {
    
 }
 
+
+
+//* ==========> OlvidePassword (se envia el nuevo password para restabler password) <==========
+const olvidePassword = async(req, res) => {
+   const { email } = req.body;
+
+   // Verificar si el usuario existe
+   const usuario = await Usuario.findOne({email})
+   if(!usuario) {
+      const error = new Error('Usuario no está registrado')         
+      return res.status(400).json({ msg: error.message });
+   }
+
+   //* Si existe el usuario
+   try {
+      //* generamos un nuevo token
+      usuario.token = generarId(); //! se genera un nuevo token
+      await usuario.save();
+
+      res.json({ msg: 'Hemos enviado un email con las instrucciones'})
+      
+   } catch (error) {
+      console.log(error)
+   }
+}
+
+
+
+
 export {
    registrar,
    autenticar,
    confirmar,
+   olvidePassword,
 }
