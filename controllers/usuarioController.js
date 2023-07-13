@@ -1,11 +1,12 @@
 import Usuario from '../models/Usuario.js';
+import generarId from '../helpers/generarId.js';
 
 
 
 // registrar un usuario
 const registrar = async (req, res) => {
    try {      
-      const { email } = req.body;
+      const { email } = req.body;      
 
       // verificamos que el email no este registrado en la db 
       const existeUsuario = await Usuario.findOne({ email })
@@ -16,6 +17,7 @@ const registrar = async (req, res) => {
 
       // si el email no esta registrado guardamos en la db
       const usuario = new Usuario(req.body);
+      usuario.token = generarId(); //! se genera el token unico
       const nuevoUsuario = await usuario.save();
 
       res.json(nuevoUsuario);
