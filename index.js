@@ -4,7 +4,8 @@ import dotenv from 'dotenv'
 import conectarDB from './config/db.js';
 import usuarioRoutes from './routes/usuarioRoutes.js'
 
-const app = express()
+const app = express();
+app.use(express.json());
 
 // habilitamos las variables de entorno
 dotenv.config();
