@@ -2,7 +2,13 @@ import Proyecto from '../models/Proyecto.js';
 
 
 //* ==========> Obtenemo todos los proyectos de usuario <==========
-const obtenerProyectos = async(req, res) => {}
+const obtenerProyectos = async(req, res) => {
+   const {_id } = req.usuario
+
+   // const proyectos = await Proyecto.find({ creador: _id })
+   const proyectos = await Proyecto.find().where('creador').equals(req.usuario)
+   res.json(proyectos)
+}
 
 
 
@@ -22,7 +28,8 @@ const nuevoProyecto = async(req, res) => {
 
    } catch (error) {
       console.log(error)      
-   }   
+   }
+   console.log(proyecto)
 }
 
 
