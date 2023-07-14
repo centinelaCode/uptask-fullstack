@@ -12,7 +12,7 @@ const proyectosSchema = mongoose.Schema({
       required: true,      
    },
    fechaEntrega: {
-      type: String,
+      type: Date,
       default: Date.now(),
    },
    cliente: {
