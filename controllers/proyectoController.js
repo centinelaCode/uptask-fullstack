@@ -88,7 +88,31 @@ const editarProyecto = async(req, res) => {
 
 
 //* ==========> Eliminar un proyecto <==========
-const eliminarProyecto = async(req, res) => {}
+const eliminarProyecto = async(req, res) => {
+   const { id } = req.params;
+  
+   // Verificamos si existe el proyecto
+   const proyecto = await Proyecto.findById(id)
+   if(!proyecto) {
+      const error = new Error('El Proyecto no existe')         
+      return res.status(404).json({ msg: error.message });
+   }   
+  
+   // Si proyecto si existe validamos que el proyecto pertenezca al usuario authenticado o es colaborador
+   if(proyecto.creador.toString() !== req.usuario._id.toString()) {
+      const error = new Error('Acción no válida - Acceso denegado')         
+      return res.status(401).json({ msg: error.message });
+   }
+
+   // si proyecto existe y pertencece al usuario auth o es colaborador lo poedmos eliminar  
+   try {
+      await proyecto.deleteOne();
+      res.status(401).json({ msg: 'Proyecto Eliminado Correctamente' }); 
+
+   } catch (error) {
+      console.log(error)      
+   }
+}
 
 
 
