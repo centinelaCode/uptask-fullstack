@@ -1,5 +1,6 @@
 import mongoose from 'mongoose'
 import Proyecto from '../models/Proyecto.js';
+import Tarea from '../models/Tarea.js';
 
 
 //* ==========> Obtenemo todos los proyectos de usuario <==========
@@ -29,9 +30,15 @@ const obtenerProyecto = async(req, res) => {
       const error = new Error('Acción no válida - Acceso denegado')         
       return res.status(401).json({ msg: error.message });
    }
+
+   // Obtener las Tareas del proyecto
+   const tareas = await Tarea.find().where('proyecto').equals(proyecto._id);   
    
-   // si proyecto existe y pertencece al usuario auth o es colaborador
-   res.json(proyecto);   
+   // la respuesta incluye el proyecto y las tareas asociadas a ese proyecto
+   res.json({
+      proyecto,
+      tareas,
+   })
 }
 
 
@@ -126,10 +133,6 @@ const eliminarColaborador = async(req, res) => {}
 
 
 
-//* ==========> Obtener Tareas <==========
-const obtenerTareas = async(req, res) => {}
-
-
 export {
    obtenerProyectos,
    obtenerProyecto,
@@ -137,6 +140,5 @@ export {
    editarProyecto,
    eliminarProyecto,
    agregarColaborador,
-   eliminarColaborador,
-   obtenerTareas,
+   eliminarColaborador,   
 }
