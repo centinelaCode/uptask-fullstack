@@ -3,7 +3,7 @@ import bcrypt from 'bcrypt'
 import Usuario from '../models/Usuario.js';
 import generarId from '../helpers/generarId.js';
 import generarJWT from '../helpers/generarJWT.js';
-import { emailRegistro } from '../helpers/emails.js'
+import { emailRegistro, emailOlvidePassword } from '../helpers/emails.js'
 
 
 
@@ -116,6 +116,13 @@ const olvidePassword = async(req, res) => {
       //* generamos un nuevo token
       usuario.token = generarId(); //! se genera un nuevo token
       await usuario.save();
+
+      // enviar el email que tendra un enalce que le permitira resetear el password
+      emailOlvidePassword({
+         nombre: usuario.nombre,
+         email: usuario.email,
+         token: usuario.token,
+      })
 
       res.json({ msg: 'Hemos enviado un email con las instrucciones'})
       
