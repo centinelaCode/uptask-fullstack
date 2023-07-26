@@ -25,7 +25,7 @@ const whitelist = [process.env.FRONTEND_URL]  // dominios permitidos
 */
 const corsOptions = {  
   origin: function(origin, callback) {
-    console.log(origin)  // es la url del frontend
+    // console.log(origin)  // es la url del frontend
     if(whitelist.includes(origin)) {
       // si origin esta en la whitelist significa que la peqticion viene del forntend y puede acceder a la API
       // enviamos en el callback null al error y damos acceso con true

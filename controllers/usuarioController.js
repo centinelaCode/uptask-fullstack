@@ -3,6 +3,7 @@ import bcrypt from 'bcrypt'
 import Usuario from '../models/Usuario.js';
 import generarId from '../helpers/generarId.js';
 import generarJWT from '../helpers/generarJWT.js';
+import { emailRegistro, emailOlvidePassword } from '../helpers/emails.js'
 
 
 
@@ -23,6 +24,14 @@ const registrar = async (req, res) => {
       usuario.token = generarId(); //! se genera el token unico
       
       await usuario.save();
+
+      // ejecutamos la funcion que envia el email
+      emailRegistro({
+         nombre: usuario.nombre,
+         email: usuario.email,
+         token: usuario.token,
+      })
+
       res.json({ msg: 'Usuario Creado Correctamente. Revisa tu Email para confirmar tu cuenta.'});
       
    } catch (error) {
@@ -107,6 +116,13 @@ const olvidePassword = async(req, res) => {
       //* generamos un nuevo token
       usuario.token = generarId(); //! se genera un nuevo token
       await usuario.save();
+
+      // enviar el email que tendra un enalce que le permitira resetear el password
+      emailOlvidePassword({
+         nombre: usuario.nombre,
+         email: usuario.email,
+         token: usuario.token,
+      })
 
       res.json({ msg: 'Hemos enviado un email con las instrucciones'})
       
