@@ -117,7 +117,7 @@ const eliminarProyecto = async(req, res) => {
    // si proyecto existe y pertencece al usuario auth o es colaborador lo poedmos eliminar  
    try {
       await proyecto.deleteOne();
-      res.status(401).json({ msg: 'Proyecto Eliminado Correctamente' }); 
+      res.json({ msg: 'Proyecto Eliminado Correctamente' }); 
 
    } catch (error) {
       console.log(error)      
