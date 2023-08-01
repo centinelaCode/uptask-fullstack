@@ -22,6 +22,11 @@ const crearTarea = async(req, res) => {
 
    try {
       const tareaAlmacenada = await Tarea.create(req.body);
+
+      // almacenar el ID el proyecto en el campo tareas que es un array
+      existeProyecto.tareas.push(tareaAlmacenada._id);
+      await existeProyecto.save();
+
       res.json(tareaAlmacenada);
 
    } catch (error) {

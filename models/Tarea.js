@@ -2,18 +2,18 @@ import mongoose, { Mongoose } from 'mongoose'
 
 const tareaSchema = mongoose.Schema({
    nombre: {
-      type: 'String',
+      type: String,
       trim: true,
       required: true,
    },
    descripcion: {
-      type: 'String',
+      type: String,
       trim: true,
       required: true,
    },
    estado: {
       type: Boolean,
-      defaul: false,
+      default: false
    },
    fechaEntrega: {
       type: Date,
@@ -21,7 +21,7 @@ const tareaSchema = mongoose.Schema({
       default: Date.now()
    },
    prioridad: {
-      type: 'String',
+      type: String,
       required: true,
       enum: ['Baja', 'Media', 'Alta'],
    },
