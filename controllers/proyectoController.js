@@ -1,6 +1,6 @@
 import mongoose from 'mongoose'
 import Proyecto from '../models/Proyecto.js';
-import Tarea from '../models/Tarea.js';
+import Usuario from '../models/Usuario.js';
 
 
 //* ==========> Obtenemo todos los proyectos de usuario <==========
@@ -125,6 +125,24 @@ const eliminarProyecto = async(req, res) => {
 }
 
 
+//* ==========> Buscar Colaborador <==========
+const buscarColaborador = async(req, res) => {
+   const {email} = req.body;
+   console.log(email)
+
+   // buscamos si hay un usuario registrado con ese email
+   const usuario = await Usuario.findOne({email}).select('-confirmado -createdAt -password -token -updatedAt -__v')
+   console.log(usuario)
+
+   // validamos si existe el usurio
+   if(!usuario) {      
+      const error = new Error('Usuario no encontrado')               
+      return res.status(404).json({ msg: error.message });
+   }
+
+   res.json(usuario);
+}
+
 
 //* ==========> Agregar Colaborador <==========
 const agregarColaborador = async(req, res) => {}
@@ -143,5 +161,6 @@ export {
    editarProyecto,
    eliminarProyecto,
    agregarColaborador,
-   eliminarColaborador,   
+   eliminarColaborador,
+   buscarColaborador,
 }
