@@ -34,7 +34,7 @@ const obtenerProyecto = async(req, res) => {
    }   
   
    // Si proyecto si existe validamos que el proyecto pertenezca al usuario authenticado o es colaborador
-   if(proyecto.creador.toString() !== req.usuario._id.toString()) {
+   if(proyecto.creador.toString() !== req.usuario._id.toString() && !proyecto.colaboradores.some(colaborador => colaborador._id.toString() === req.usuario._id.toString() )) {
       const error = new Error('Acción no válida - Acceso denegado')         
       return res.status(401).json({ msg: error.message });
    }
