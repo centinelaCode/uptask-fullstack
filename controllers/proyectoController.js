@@ -19,7 +19,7 @@ const obtenerProyecto = async(req, res) => {
    const { id } = req.params;
   
    // Verificamos si existe el proyecto
-   const proyecto = await Proyecto.findById(id).populate('tareas')
+   const proyecto = await Proyecto.findById(id).populate('tareas').populate("colaboradores", "nombre email")
    if(!proyecto) {
       const error = new Error('El Proyecto no existe')         
       return res.status(404).json({ msg: error.message });
