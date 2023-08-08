@@ -8,7 +8,15 @@ const obtenerProyectos = async(req, res) => {
    // const {_id } = req.usuario
 
    // const proyectos = await Proyecto.find({ creador: _id })
-   const proyectos = await Proyecto.find().where('creador').equals(req.usuario).select("-tareas")
+   const proyectos = await Proyecto.find({
+      '$or': [
+         {'colaboradores': {$in: req.usuario}},  // permite que el colaborador tenga acceso al colaborador
+         {'creador': {$in: req.usuario}},        // permite que el creador tenga acceso a su proyecto
+      ]   
+   })
+      // .where('creador')
+      // .equals(req.usuario)
+      .select("-tareas")
    res.json(proyectos)
 }
 
