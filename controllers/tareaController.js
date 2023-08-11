@@ -138,7 +138,9 @@ const cambiarEstado = async(req, res) => {
    const { id } = req.params
 
    // verificanmos que la tarea exista
-   const tarea = await Tarea.findById(id).populate('proyecto')   
+   const tarea = await Tarea.findById(id)
+      .populate('proyecto')
+      // .populate('completado')   
 
    // validamos si existe la tarea
    if(!tarea) {
@@ -158,9 +160,14 @@ const cambiarEstado = async(req, res) => {
    }
 
    tarea.estado = !tarea.estado;
+   tarea.completado = req.usuario._id
    await tarea.save()
 
-   res.json(tarea)
+   const tareaAlmacenada = await Tarea.findById(id)
+      .populate('proyecto')
+      .populate('completado')   
+
+   res.json(tareaAlmacenada)
 }
 
 
