@@ -116,7 +116,14 @@ const eliminarTarea = async(req, res) => {
    }
 
    try {
-      await tarea.deleteOne();
+
+      const proyecto = await Proyecto.findById(tarea.proyecto)
+      proyecto.tareas.pull(tarea._id)
+
+      // usamos un Promise.allSettled para que se procesen al mismo tiempo
+      // para eliminar la tarea en la coleccion de tareas, pero tambien eliminarla en proyectos
+      await Promise.allSettled([await proyecto.save(), await tarea.deleteOne()])
+
       res.json({ msg: 'La Tarea ha sido eliminada' }); 
 
    } catch (error) {
