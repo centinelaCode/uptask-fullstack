@@ -127,7 +127,9 @@ const eliminarTarea = async(req, res) => {
 
 
 //* ==========> Cambiar Estado de una Tarea <==========
-const cambiarEstado = async(req, res) => {}
+const cambiarEstado = async(req, res) => {
+   console.log(req.params.id)
+}
 
 
 export {

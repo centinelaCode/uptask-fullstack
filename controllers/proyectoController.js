@@ -66,7 +66,7 @@ const nuevoProyecto = async(req, res) => {
    } catch (error) {
       console.log(error)      
    }
-   console.log(proyecto)
+   // console.log(proyecto)
 }
 
 
@@ -225,7 +225,7 @@ const eliminarColaborador = async(req, res) => {
    // si todo OK se puede eliminar
    proyecto.colaboradores.pull(req.body.id)
    
-   console.log(proyecto)
+   // console.log(proyecto)
 
    await  proyecto.save()
    res.json({msg: 'Colaborador Eliminado Correctamente'})
