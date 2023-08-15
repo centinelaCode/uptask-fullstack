@@ -61,9 +61,17 @@ const io = new Server(servidor, {
   },
 })
 
-io.on('connection', (sokect) => {
+io.on('connection', (socket) => {
   console.log('Conectado a socke.io');
 
   // definir los eventos de socket.io
-  
+
+  // recibiendo un evento
+  socket.on('prueba', (proyectos) => {
+    console.log('prueba desde socket.io ', proyectos);
+  })
+
+  // emitieendo un evento
+  socket.emit('respuesta', {nombre: 'RVP'})
+
 })
