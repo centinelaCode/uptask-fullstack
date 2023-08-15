@@ -66,12 +66,4 @@ io.on('connection', (socket) => {
 
   // definir los eventos de socket.io
 
-  // recibiendo un evento
-  socket.on('prueba', (proyectos) => {
-    console.log('prueba desde socket.io ', proyectos);
-  })
-
-  // emitieendo un evento
-  socket.emit('respuesta', {nombre: 'RVP'})
-
 })
