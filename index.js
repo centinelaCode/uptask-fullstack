@@ -65,5 +65,16 @@ io.on('connection', (socket) => {
   console.log('Conectado a socke.io');
 
   // definir los eventos de socket.io
+  
+  //!recibimos el evento 'abrir proyecto'
+  socket.on('abrir proyecto', (proyecto) => {
+    // console.log('Desde el pryecto ', proyectoId)
+
+    // usamos .join para agregar cada proyecto a un room diferente
+    socket.join(proyecto)
+
+    // example mothod .to (emit a un room especifico)
+    socket.to('64c8401e0d44589dc7dace34').emit('respuesta', { nombre: 'Raul' })
+  })
 
 })
