@@ -8,7 +8,15 @@ const obtenerProyectos = async(req, res) => {
    // const {_id } = req.usuario
 
    // const proyectos = await Proyecto.find({ creador: _id })
-   const proyectos = await Proyecto.find().where('creador').equals(req.usuario).select("-tareas")
+   const proyectos = await Proyecto.find({
+      '$or': [
+         {'colaboradores': {$in: req.usuario}},  // permite que el colaborador tenga acceso al colaborador
+         {'creador': {$in: req.usuario}},        // permite que el creador tenga acceso a su proyecto
+      ]   
+   })
+      // .where('creador')
+      // .equals(req.usuario)
+      .select("-tareas")
    res.json(proyectos)
 }
 
@@ -19,14 +27,17 @@ const obtenerProyecto = async(req, res) => {
    const { id } = req.params;
   
    // Verificamos si existe el proyecto
-   const proyecto = await Proyecto.findById(id).populate('tareas').populate("colaboradores", "nombre email")
+   const proyecto = await Proyecto.findById(id)
+      .populate({ path: 'tareas', populate: {path: 'completado', select: "nombre"} })
+      .populate("colaboradores", "nombre email")
+
    if(!proyecto) {
       const error = new Error('El Proyecto no existe')         
       return res.status(404).json({ msg: error.message });
    }   
   
    // Si proyecto si existe validamos que el proyecto pertenezca al usuario authenticado o es colaborador
-   if(proyecto.creador.toString() !== req.usuario._id.toString()) {
+   if(proyecto.creador.toString() !== req.usuario._id.toString() && !proyecto.colaboradores.some(colaborador => colaborador._id.toString() === req.usuario._id.toString() )) {
       const error = new Error('Acción no válida - Acceso denegado')         
       return res.status(401).json({ msg: error.message });
    }
@@ -58,7 +69,7 @@ const nuevoProyecto = async(req, res) => {
    } catch (error) {
       console.log(error)      
    }
-   console.log(proyecto)
+   // console.log(proyecto)
 }
 
 
@@ -217,7 +228,7 @@ const eliminarColaborador = async(req, res) => {
    // si todo OK se puede eliminar
    proyecto.colaboradores.pull(req.body.id)
    
-   console.log(proyecto)
+   // console.log(proyecto)
 
    await  proyecto.save()
    res.json({msg: 'Colaborador Eliminado Correctamente'})
