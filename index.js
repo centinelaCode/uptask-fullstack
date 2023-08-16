@@ -76,10 +76,18 @@ io.on('connection', (socket) => {
 
   // recibimos el evento 'nueva tarea'
   socket.on('nueva tarea', tarea => {
-    const {proyecto}  = tarea;
+    const proyecto  = tarea.proyecto;
     
     // socket.to(proyecto).emit('tarea agregada', tarea)
     socket.to(proyecto).emit('tarea agregada', tarea)
+  })
+
+  // recibimos el evento 'eliminar tarea'
+  socket.on('eliminar tarea', tarea => {
+    const proyecto  = tarea.proyecto;
+
+    // emitimos la tarea al proeycto especificado para eliminaral
+    socket.to(proyecto).emit('tarea eliminada', tarea)
   })
 
 })
