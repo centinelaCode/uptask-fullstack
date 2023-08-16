@@ -67,14 +67,19 @@ io.on('connection', (socket) => {
   // definir los eventos de socket.io
   
   //!recibimos el evento 'abrir proyecto'
-  socket.on('abrir proyecto', (proyecto) => {
-    // console.log('Desde el pryecto ', proyectoId)
-
-    // usamos .join para agregar cada proyecto a un room diferente
-    socket.join(proyecto)
-
+  socket.on('abrir proyecto', (proyecto) => {    
+    socket.join(proyecto) // usamos .join para agregar cada proyecto a un room diferente
+    
     // example mothod .to (emit a un room especifico)
-    socket.to('64c8401e0d44589dc7dace34').emit('respuesta', { nombre: 'Raul' })
+    // socket.to('64c8401e0d44589dc7dace34').emit('respuesta', { nombre: 'Raul' })    
+  });
+
+  // recibimos el evento 'nueva tarea'
+  socket.on('nueva tarea', tarea => {
+    const {proyecto}  = tarea;
+    
+    // socket.to(proyecto).emit('tarea agregada', tarea)
+    socket.to(proyecto).emit('tarea agregada', tarea)
   })
 
 })
