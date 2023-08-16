@@ -90,4 +90,12 @@ io.on('connection', (socket) => {
     socket.to(proyecto).emit('tarea eliminada', tarea)
   })
 
+  // recibimos el evento 'actualizar tarea'
+  socket.on('actualizar tarea', tarea => {    
+    const proyecto  = tarea.proyecto._id;
+
+    // emitimos la tarea al proyecto especificado para actualizarla
+    socket.to(proyecto).emit('tarea actualizada', tarea)
+  })
+
 })
