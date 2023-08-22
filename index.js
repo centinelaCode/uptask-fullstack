@@ -47,6 +47,63 @@ app.use('/api/proyectos', proyectoRoutes);
 app.use('/api/tareas', tareaRoutes);
 
 const PORT = process.env.PORT || 4000
-app.listen(PORT, () => {
+const servidor = app.listen(PORT, () => {
   console.log(`Server run on port ${PORT}`)
+})
+
+// socket.io
+import { Server } from 'socket.io'
+
+const io = new Server(servidor, {
+  pingTimeout: 60000,
+  cors: {
+    origin: process.env.FRONTEND_URL,
+  },
+})
+
+io.on('connection', (socket) => {
+  console.log('Conectado a socke.io');
+
+  // definir los eventos de socket.io
+  
+  //!recibimos el evento 'abrir proyecto'
+  socket.on('abrir proyecto', (proyecto) => {    
+    socket.join(proyecto) // usamos .join para agregar cada proyecto a un room diferente
+    
+    // example mothod .to (emit a un room especifico)
+    // socket.to('64c8401e0d44589dc7dace34').emit('respuesta', { nombre: 'Raul' })    
+  });
+
+  // recibimos el evento 'nueva tarea'
+  socket.on('nueva tarea', tarea => {
+    const proyecto  = tarea.proyecto;
+    
+    // socket.to(proyecto).emit('tarea agregada', tarea)
+    socket.to(proyecto).emit('tarea agregada', tarea)
+  })
+
+  // recibimos el evento 'eliminar tarea'
+  socket.on('eliminar tarea', tarea => {
+    const proyecto  = tarea.proyecto;
+
+    // emitimos la tarea al proeycto especificado para eliminaral
+    socket.to(proyecto).emit('tarea eliminada', tarea)
+  })
+
+  // recibimos el evento 'actualizar tarea'
+  socket.on('actualizar tarea', tarea => {    
+    const proyecto  = tarea.proyecto._id;
+
+    // emitimos la tarea al proyecto especificado para actualizarla
+    socket.to(proyecto).emit('tarea actualizada', tarea)
+  })
+
+  // recibimos el evento 'cambiar estado'
+  socket.on('cambiar estado', tarea => {
+    const proyecto  = tarea.proyecto._id;
+
+    // emitimos la tarea al proyecto especificado para cambiar su estado
+    socket.to(proyecto).emit('nuevo estado', tarea)
+  })
+
 })
